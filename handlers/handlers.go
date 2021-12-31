@@ -7,16 +7,18 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"github.com/sanalegon/technicians-app-sanalegon/middlew"
+	"github.com/sanalegon/twittor/routers"
 	//"github.com/sanalegon/technicians/middlew"
 	//"github.com/sanalegon/technicians/routers"
 )
 
-/* Controller I set my port, the handler and I tell the server to listen */
+/* Handler sets current port, the handler and I tell the server to listen */
 func Handler() {
 	router := mux.NewRouter()
 
 	// Routes(Endpoints):
-	// ...
+	router.HandleFunc("/registro", middlew.CheckDB(routers.Registro)).Methods("POST")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
