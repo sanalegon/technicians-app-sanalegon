@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/sanalegon/technicians-app-sanalegon/middlew"
-	"github.com/sanalegon/twittor/routers"
+	routers "github.com/sanalegon/technicians-app-sanalegon/router"
 	//"github.com/sanalegon/technicians/middlew"
 	//"github.com/sanalegon/technicians/routers"
 )
@@ -18,7 +18,7 @@ func Handler() {
 	router := mux.NewRouter()
 
 	// Routes(Endpoints):
-	router.HandleFunc("/registro", middlew.CheckDB(routers.Registro)).Methods("POST")
+	router.HandleFunc("/registro", middlew.CheckDB(routers.Register)).Methods("POST")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {

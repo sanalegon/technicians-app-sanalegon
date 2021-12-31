@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ptilotta/twittor/bd"
+	"github.com/sanalegon/technicians-app-sanalegon/db"
+	"github.com/sanalegon/technicians-app-sanalegon/models"
 )
 
 // funciones devuelven nada, metodos si. Esto si es una funcion
@@ -14,39 +15,39 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&t) // decodificamos lo que viene en el body dentro del modelo t. El body es un stream, es un dato que solo se puede leer una vez. Una vez leido, una vez destruido
 
 	if err != nil {
-		http.Error(w, "Error en los datos recibidos => "+err.Error(), 400)
+		http.Error(w, "Error in the received data => "+err.Error(), 400)
 		return
 	}
 
 	if len(t.Email) == 0 {
-		http.Error(w, "El email de usuario es requerido", 400)
+		http.Error(w, "Email must be written", 400)
 		return
 	}
 
 	if len(t.Password) < 6 {
-		http.Error(w, "Debe especificar una contraseña de al menos 6 caracteres", 400)
+		http.Error(w, "Password must contain at least 6 characters", 400)
 		return
 	}
 
 	// la funcion devuelve tres valores, solo que ignorare el primero y el ultimo
-	_, encontrado, _ := bd.ChequeoYaExisteUsuario(t.Email)
+	_, encontrado, _ := db.CheckIfUserExists(t.Email)
 
 	if encontrado == true {
-		http.Error(w, "Ya existe un usuario registrado con ese E-Mail", 400)
+		http.Error(w, "There's already an User with the sent Email", 400)
 		return
 	}
 
-	_, status, err := bd.InsertoRegistro(t)
+	_, status, err := db.InsertRecord(t)
 
 	if err != nil {
-		http.Error(w, "Ocurrio un error al intentar registrar el usuario => "+err.Error(), 400)
+		http.Error(w, "It happened an error when trying to insert the current user => "+err.Error(), 400)
 		return
 	}
 
 	if status == false {
-		http.Error(w, "No se logro insertar el registro el usuario => ", 400)
+		http.Error(w, "It was not possible to insert the current user => ", 400)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated) // Devolvemos por el header, que se logro crear el usuario. Se usara las constante de http para el codigo de estado
+	w.WriteHeader(http.StatusCreated)
 }
